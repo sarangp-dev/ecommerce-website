@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "dev": "npm --prefix backend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^26.1.2"
+  },
+  "dependencies": {
+    "cloudinary": "^2.10.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.2.0"
+  }
+}
