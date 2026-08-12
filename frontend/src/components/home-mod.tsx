@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import './home-mod.css'
 import { useState, useCallback, useEffect, type MouseEvent } from 'react'
 
@@ -159,6 +160,7 @@ const C = {
 
 function Nav({ cartCount }: { cartCount: number }) {
     const [scrolled, setScrolled] = useState(false)
+    const navigate = useNavigate()
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 50)
@@ -235,7 +237,7 @@ function Nav({ cartCount }: { cartCount: number }) {
                 >
                     🔍
                 </button>
-                <button
+                <button onClick={() => navigate('/cart')}
                     style={{
                         position: 'relative',
                         background: C.goldDim,
@@ -252,7 +254,7 @@ function Nav({ cartCount }: { cartCount: number }) {
                         gap: '0.45rem',
                     }}
                 >
-                    <span>🛒</span> Cart
+                    <span >🛒</span> Cart
                     {cartCount > 0 && (
                         <span
                             style={{
@@ -1596,9 +1598,9 @@ function Footer() {
                             marginBottom: '1rem',
                         }}
                     >
-                        <span style={{ color: C.goldDark }}>N</span>
-                        <span style={{ color: C.fg }}>EXU</span>
-                        <span style={{ color: C.olive }}>S</span>
+                        <span style={{ color: C.goldDark }}>Y</span>
+                        <span style={{ color: C.fg }}>UTH</span>
+                        <span style={{ color: C.olive }}>i</span>
                     </div>
                     <p
                         style={{

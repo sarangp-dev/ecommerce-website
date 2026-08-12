@@ -9,6 +9,8 @@ import Authentication from './components/registration-login'
 import { DummyInventoryDashboard } from './admin/sales'
 import { YuthiAdminDashboard } from './admin/productadd'
 import InitializeNewproduct from './admin/addproduct'
+import Cartpage from './components/cart'
+import Profile from './components/profile'
 
 
 function App() {
@@ -25,8 +27,11 @@ function App() {
             <Route path='/homemod' element={<HomeMod />} />
             <Route path='/regi-logi' element={<Authentication />} />
             <Route path='/dashbord' element={<DummyInventoryDashboard />} />
-            <Route path='/productlist' element={<YuthiAdminDashboard />} />
-            <Route path='/addproduct' element={<InitializeNewproduct />} />
+            <Route path='/productListAdmin' element={<YuthiAdminDashboard />} />
+            <Route path='/addproductAdmin' element={<InitializeNewproduct />} />
+            <Route path='/cart' element={<Cartpage />} />
+            <Route path='/profile' element={<Profile />} />
+            
 
           </Routes>
         </BrowserRouter>

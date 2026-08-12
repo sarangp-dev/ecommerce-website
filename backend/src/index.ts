@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user-route.js";
+
 import productRoutes from "./routes/product-route.js";
 import connectDB from "./config/db.js";
 import cloudinary from "./config/cloudinary.js";
