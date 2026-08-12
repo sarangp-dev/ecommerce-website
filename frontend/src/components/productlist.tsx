@@ -156,8 +156,8 @@ export default function ProductList() {
                                 key={category}
                                 onClick={() => setSelectedCategory(category)}
                                 className={`px-4 py-1.5 rounded-full border border-[#77574d] transition-colors font-['Manrope'] text-[14px] active:scale-95 ${selectedCategory === category
-                                        ? 'bg-[#77574d] text-white'
-                                        : 'text-[#77574d] hover:bg-[#77574d] hover:text-white'
+                                    ? 'bg-[#77574d] text-white'
+                                    : 'text-[#77574d] hover:bg-[#77574d] hover:text-white'
                                     }`}
                             >
                                 {category}
