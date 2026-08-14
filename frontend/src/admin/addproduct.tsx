@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-const API_URL = import.meta.env.VITE_API_URL_PRODUCT;
+const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
 export default function InitializeNewproduct(): React.JSX.Element {
     const [formData, setFormData] = React.useState({
@@ -46,7 +46,7 @@ export default function InitializeNewproduct(): React.JSX.Element {
             }
 
             const response = await axios.post(
-                `${API_URL}/addproduct`,
+                `${API_URL_PRODUCT}/addproduct`,
                 data,
                 {
                     headers: {

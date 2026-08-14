@@ -9,5 +9,13 @@ router.post(
     uploadProductPhoto,
     controller.addProduct
 );
+router.get("/getproducts", controller.getAllProducts);
 
+router.put(
+    "/editproduct/:id",
+    uploadProductPhoto,
+    controller.editProduct
+);
+
+router.delete("/deleteproduct/:id", controller.deleteProduct);
 export default router;

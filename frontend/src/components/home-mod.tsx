@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom'
 import './home-mod.css'
 import { useState, useCallback, useEffect, type MouseEvent } from 'react'
+import axios from "axios";
+
+const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const products = [
+const initialProducts = [
     {
         id: 1,
         name: 'Nebula Pro Headphones',
@@ -649,7 +652,13 @@ function HeroSection() {
 
 // ─── Product Card ─────────────────────────────────────────────────────────────
 
-function ProductCard({ product, onAddToCart }: { product: (typeof products)[0]; onAddToCart: () => void }) {
+function ProductCard({
+    product,
+    onAddToCart
+}: {
+    product: any;
+    onAddToCart: () => void;
+}) {
     const { tilt, transition, onMouseMove, onMouseLeave } = useTilt(13)
     const [added, setAdded] = useState(false)
 
@@ -817,12 +826,21 @@ function ProductCard({ product, onAddToCart }: { product: (typeof products)[0]; 
 }
 
 // ─── Products Section ─────────────────────────────────────────────────────────
+function ProductsSection({
+    products,
+    onAddToCart
+}: {
+    products: any[];
+    onAddToCart: () => void;
+}) {
+    const [filter, setFilter] = useState('All');
 
-function ProductsSection({ onAddToCart }: { onAddToCart: () => void }) {
-    const [filter, setFilter] = useState('All')
-    const filters = ['All', 'Audio', 'Wearables', 'Computing', 'Photography', 'Footwear', 'Eyewear']
-    const filtered = filter === 'All' ? products : products.filter((p) => p.category === filter)
+    const filters = ['All'];
 
+    const filtered =
+        filter === 'All'
+            ? products
+            : products.filter((p) => p.category === filter);
     return (
         <section style={{ padding: '6rem 4rem' }} className="section-pad">
             <div style={{ marginBottom: '3rem' }}>
@@ -1702,13 +1720,33 @@ function Footer() {
 
 export default function HomeMod() {
     const [cartCount, setCartCount] = useState(0)
+    const [products, setProducts] = useState(initialProducts);
     const addToCart = useCallback(() => setCartCount((n) => n + 1), [])
+    const getproducts = async () => {
+        try {
+            const res = await axios.get(`${API_URL_PRODUCT}/getproducts`);
+
+            if (res.status === 200) {
+                console.log("Product data successfully fetched:", res.data);
+
+                setProducts(res.data.products);
+            }
+        } catch (err) {
+            console.error("Error fetching products:", err);
+        }
+    };
+    useEffect(() => {
+        getproducts();
+    }, []);
 
     return (
         <div style={{ background: C.bg, minHeight: '100vh', color: C.fg }}>
             <Nav cartCount={cartCount} />
             <HeroSection />
-            <ProductsSection onAddToCart={addToCart} />
+            <ProductsSection
+                products={products}
+                onAddToCart={addToCart}
+            />
             <CategoriesSection />
             <SpotlightSection onAddToCart={addToCart} />
             <TestimonialsSection />

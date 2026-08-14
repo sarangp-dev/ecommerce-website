@@ -58,14 +58,58 @@ const PRODUCTS: Product[] = [
         inStock: true,
         badge: "Essential",
         icon: "lightbulb"
+    },
+    {
+        id: 5,
+        name: "Brass Navigator Compass",
+        category: "Navigation",
+        price: 450,
+        description: "Calibrated for true north regardless of localized magnetic anomalies. Essential for uncharted territories.",
+        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDA3VykB3PjwSNOQLN6VIul9ajNkPhzBU50q-ZyuQPjuQYGHlTsYJS4f-Mkxb_5YhES90P9idLCv0YPiweOB_kbVzbjbLS55X8Seh_5FvfEAUL4ZqPCyHEW3E8ERZtrGQPhBkRnUVxKY3-7oYkRINqjQh0imP9p2Wkld6oJQtxmWUeseRmBTq5GCQuM32GOWQ11q_dHi1-2IK40nuV67qnryU3W3oOt_jfCPSyg5um4coYlPpyPYQ",
+        inStock: true,
+        badge: "Artifact",
+        icon: "explore"
+    },
+    {
+        id: 6,
+        name: "Weatherproof Journal",
+        category: "Storage",
+        price: 120,
+        description: "Archival-grade paper bound in oiled leather. Resists water, mud, and the test of time. Record every discovery.",
+        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuC6cL1UBy4ry0o13LKIAAEFtI4-oiXJH1bAeB5Tu2SvKXz5DwZ1irvYFRn5z_4HKnrE72a_afv5UpYsOENBUhAMPLSxfaIomGa-M9Du5QljJifkNHNuq1epVk__Ntt-FBn-9cVWzmT-EOvw7WmGqPzF8D5A3z7A9NjTr9pL_91vevF7E9Q1W2N_GiFz69nwjdYs7xZZBX51JX2Ng5-nc4m7SpXQ4pXx1CLpfwq3qSb2T7hAqjYg_A",
+        inStock: true,
+        badge: "Popular",
+        icon: "book_4"
+    },
+    {
+        id: 7,
+        name: "Canvas Expedition Satchel",
+        category: "Storage",
+        price: 850,
+        description: "Woven from deep-loom canvas and reinforced with brass rivets. Spacious enough for charts, rations, and tools.",
+        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB1nnoj3XKRtfFpKiv3OOd9yu_h2vW_ZZVibMCXiQIqN2yZLqytjkEpbaOtc3_TJeq-ZpkridzNIlufOG-5k5-Lf46PR7MS1TxzZp1McuThOuaX2T-4_gVSNB5Fc0_2MwAkubI-XA80dZ76Jxa3PoVYD-mWkPkpV7r4gYM_3bUYeqlQQT8q-OQccLjlsCTzDXhgy6-u8hIGjQUj7VB-EL-R490FN_g_g7gLIRFS7MFgh-Ri6ywm9Q",
+        inStock: false,
+        badge: "Heavy Duty",
+        icon: "work"
+    },
+    {
+        id: 8,
+        name: "Iron-Clad Lantern",
+        category: "Illumination",
+        price: 320,
+        description: "Burns clean and bright even in gale-force winds. The thick glass is shatter-resistant to withstand rough terrain.",
+        image: "https://lh3.googleusercontent.com/aida-public/AB6AXuChiCOIHb2NI-iaUrhaXzPgMC3d8gtsiud9yBg2uCLHSG4Znzlq1dSitNRl-_uLyRzsKqIL_07DtjQ5NmM1ZsXY3r1w07iMKGPjkvz8RnE5aYl8zxtmuLvXhar60zxrOwIrMebl2_Zb8F9GOsidNkYTNe2oTlhlzAodgNDjVHG_VWwhSMVWw_amuVnaHdyhbn4h5fYdI1JIBdcxZbo1ProOVVbOo5cf65fjjMZZEf2YbNaEOJCFjQ",
+        inStock: true,
+        badge: "Essential",
+        icon: "lightbulb"
     }
 ];
 
 export default function ProductList() {
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState < string > ('All');
-    const [sortBy, setSortBy] = useState < string > ('price-low');
-    const [cartCount, setCartCount] = useState < number > (0);
+    const [selectedCategory, setSelectedCategory] = useState<string>('All');
+    const [sortBy, setSortBy] = useState<string>('price-low');
+    const [cartCount, setCartCount] = useState<number>(0);
 
     const categories = ['All', 'Navigation', 'Storage', 'Illumination'];
 

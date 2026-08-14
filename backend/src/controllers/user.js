@@ -119,6 +119,34 @@ const LoginController = async (req, res) => {
         return res.status(500).json({ message: "Login failed", error: message });
     }
 };
+const getProfile = async (req, res) => {
+    try {
+        const userEmail = req.user.email;
+        if (!userEmail) {
+            console.log("user email not founded")
+        }
+        const user = await User.findOne({
+            userEmail
+        });
+        if (user) {
+            const profileData = {
+                Dp: user.profileImage,
+                Name: user.username,
+                Email: user.email
+
+
+            }
+        }
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            user
+        });
+    }
+    catch (err) {
+        console.log("error in profile getting")
+    }
+}
 
 
 export default { RegistrationController, LoginController };

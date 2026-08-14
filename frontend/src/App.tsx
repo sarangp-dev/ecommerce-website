@@ -11,6 +11,7 @@ import { YuthiAdminDashboard } from './admin/productadd'
 import InitializeNewproduct from './admin/addproduct'
 import Cartpage from './components/cart'
 import Profile from './components/profile'
+import ProductList from './components/productlist';
 
 
 function App() {
@@ -31,7 +32,9 @@ function App() {
             <Route path='/addproductAdmin' element={<InitializeNewproduct />} />
             <Route path='/cart' element={<Cartpage />} />
             <Route path='/profile' element={<Profile />} />
-            
+            <Route path='/productlist' element={<ProductList />} />
+
+
 
           </Routes>
         </BrowserRouter>
