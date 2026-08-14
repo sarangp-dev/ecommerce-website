@@ -288,7 +288,23 @@ function Nav({ cartCount }: { cartCount: number }) {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-function HeroSection() {
+function HeroSection({ products }: { products: any[] }) {
+    const [currentImage, setCurrentImage] = useState(0);
+
+    useEffect(() => {
+        if (!products || products.length === 0) return;
+
+        const interval = setInterval(() => {
+            setCurrentImage((prev) => (prev + 1) % products.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [products]);
+
+    const currentProduct = products[currentImage];
+
+    if (!currentProduct) return null;
+
     return (
         <section
             style={{
@@ -552,9 +568,14 @@ function HeroSection() {
                     }}
                 >
                     <img
-                        src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&auto=format"
-                        alt="Nebula Pro Headphones — flagship product"
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        src={currentProduct.image}
+                        alt={currentProduct.name}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                            transition: 'opacity 0.5s ease-in-out',
+                        }}
                     />
                 </div>
 
@@ -1742,7 +1763,7 @@ export default function HomeMod() {
     return (
         <div style={{ background: C.bg, minHeight: '100vh', color: C.fg }}>
             <Nav cartCount={cartCount} />
-            <HeroSection />
+            <HeroSection products={products} />
             <ProductsSection
                 products={products}
                 onAddToCart={addToCart}
