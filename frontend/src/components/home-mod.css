@@ -139,3 +139,71 @@ html::-webkit-scrollbar {
         display: none !important;
     }
 }
+
+.hero-product-image {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    /* Optimized custom cubic-bezier for a high-end, weightless feel */
+    animation: premiumProductReveal 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    /* Tell the browser to optimize layers ahead of time */
+    will-change: transform, opacity;
+
+    /* Prevent flickering on WebKit/Blink engines */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    perspective: 1000px;
+    -webkit-perspective: 1000px;
+
+    /* Force hardware acceleration and smooth sub-pixel rendering */
+    transform: translate3d(0, 0, 0) scale(1.03);
+    transform-style: preserve-3d;
+}
+
+@keyframes premiumProductReveal {
+    0% {
+        opacity: 0;
+        /* Using 3D translates forces the GPU compositor */
+        transform: translate3d(24px, 0, 0) scale(1.06);
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1.03);
+    }
+}
+
+.hero-image-overlay {
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.03),
+            transparent 35%,
+            transparent 65%,
+            rgba(212, 175, 55, 0.04));
+
+    /* 
+      Note: mix-blend-mode forces heavy compositing operations. 
+      If you notice micro-stutters on lower-end mobile devices, 
+      change this to 'opacity' or remove it. Otherwise, isolate it:
+    */
+    mix-blend-mode: soft-light;
+    isolation: isolate;
+
+    /* Lock overlay to the GPU layer as well */
+    transform: translate3d(0, 0, 0);
+    will-change: opacity;
+}

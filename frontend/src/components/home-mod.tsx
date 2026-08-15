@@ -291,20 +291,26 @@ function Nav({ cartCount }: { cartCount: number }) {
 function HeroSection({ products }: { products: any[] }) {
     const [currentImage, setCurrentImage] = useState(0);
 
+    const [isChanging, setIsChanging] = useState(false);
     useEffect(() => {
-        if (!products || products.length === 0) return;
+        if (!products || products.length <= 1) return;
 
-        const interval = setInterval(() => {
+        const timer = setTimeout(() => {
             setCurrentImage((prev) => (prev + 1) % products.length);
-        }, 5000);
+        }, 20000);
 
-        return () => clearInterval(interval);
-    }, [products]);
+        return () => clearTimeout(timer);
+    }, [products, currentImage]);
+    useEffect(() => {
+        if (!products || products.length <= 1) return;
 
+        const timer = setTimeout(() => {
+            setCurrentImage((prev) => (prev + 1) % products.length);
+        }, 20000); // EVERY image stays for exactly 20 seconds
+
+        return () => clearTimeout(timer);
+    }, [currentImage, products.length]);
     const currentProduct = products[currentImage];
-
-    if (!currentProduct) return null;
-
     return (
         <section
             style={{
@@ -567,16 +573,23 @@ function HeroSection({ products }: { products: any[] }) {
                         flexShrink: 0,
                     }}
                 >
-                    <img
-                        src={currentProduct.image}
-                        alt={currentProduct.name}
+                    <div
                         style={{
+                            position: 'relative',
                             width: '100%',
                             height: '100%',
-                            objectFit: 'cover',
-                            transition: 'opacity 0.5s ease-in-out',
+                            overflow: 'hidden',
                         }}
-                    />
+                    >
+                        <img
+                            key={currentProduct.image}
+                            src={currentProduct.image}
+                            alt={currentProduct.name}
+                            className="hero-product-image"
+                        />
+
+                        <div className="hero-image-overlay" />
+                    </div>
                 </div>
 
                 {/* Floating badge 1 */}
@@ -730,13 +743,15 @@ function ProductCard({
                     }}
                 >
                     <img
+                        key={product.image}
                         src={product.image}
                         alt={product.name}
                         style={{
                             width: '100%',
                             height: '100%',
                             objectFit: 'cover',
-                            transform: `translateZ(10px) scale(1.03)`,
+                            transform: 'translateZ(10px) scale(1.03)',
+                            animation: 'productImageTransition 0.8s ease-in-out',
                         }}
                     />
                     <div
