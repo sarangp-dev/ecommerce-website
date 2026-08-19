@@ -22,6 +22,7 @@ function App() {
       <MyContext.Provider value={{}}>
         <BrowserRouter>
           <Routes>
+            <Route path="/" element={<HomeMod />} />
             <Route path='/home' element={<Home />} />
             <Route path='/landing3d' element={<Landing3D />} />
             <Route path='/test' element={<Test />} />
@@ -33,9 +34,6 @@ function App() {
             <Route path='/cart' element={<Cartpage />} />
             <Route path='/profile' element={<Profile />} />
             <Route path='/productlist' element={<ProductList />} />
-
-
-
           </Routes>
         </BrowserRouter>
       </MyContext.Provider>
