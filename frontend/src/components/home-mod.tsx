@@ -297,7 +297,7 @@ function HeroSection({ products }: { products: any[] }) {
 
         const timer = setTimeout(() => {
             setCurrentImage((prev) => (prev + 1) % products.length);
-        }, 20000);
+        }, 2000);
 
         return () => clearTimeout(timer);
     }, [products, currentImage]);
