@@ -276,8 +276,6 @@ function Login({ onSwitch, role, activeField, setActiveField }: AuthProps) {
             const response = await axios.post(`${API_URL}/login`, {
                 email: loginData.email,
                 password: loginData.password
-            }, {
-                withCredentials: true
             });
             if (response.status === 200 || response.status === 201) {
                 console.log('Login successful:', response.data);

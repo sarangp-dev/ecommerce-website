@@ -197,7 +197,11 @@ export const YuthiAdminDashboard: React.FC = () => {
             setDeletingId(id);
             setLoadingMessage('Purging record from secure node...');
             setActionLoading(true);
-            await axios.delete(`${API_URL_PRODUCT}/deleteproduct/${id}`);
+            await axios.delete(`${API_URL_PRODUCT}/deleteproduct/${id}`,
+                {
+                    withCredentials: true
+                }
+            );
             setProducts((prev) => prev.filter((item) => item.id !== id));
         } catch (error) {
             console.error("Error deleting product:", error);
@@ -235,6 +239,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
+                    withCredentials: true,
                 }
             );
 
@@ -290,6 +295,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
+                    withCredentials: true,
                 }
             );
 
