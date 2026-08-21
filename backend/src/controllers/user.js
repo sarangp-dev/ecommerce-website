@@ -69,6 +69,7 @@ const RegistrationController = async (req, res) => {
     }
 };
 const LoginController = async (req, res) => {
+    console.log("LoginController called with body:");
     try {
         const { email, password } = req.body;
 
