@@ -78,8 +78,8 @@ const LoginController = async (req, res) => {
                 message: "Email and password are required"
             });
         }
-
-        const user = await User.findOne({ email });
+        const UserEmail = email
+        const user = await User.findOne({ email: UserEmail });
 
         if (!user) {
             return res.status(401).json({
@@ -122,6 +122,7 @@ const LoginController = async (req, res) => {
 
     } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
+        console.log("error:", message)
         return res.status(500).json({
             message: "Login failed",
             error: message
