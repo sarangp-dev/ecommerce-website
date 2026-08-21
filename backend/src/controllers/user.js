@@ -69,8 +69,6 @@ const RegistrationController = async (req, res) => {
     }
 };
 const LoginController = async (req, res) => {
-    console.log("LoginController called with body:", req.body);
-
     try {
         const { email, password } = req.body;
 
@@ -88,10 +86,7 @@ const LoginController = async (req, res) => {
             });
         }
 
-        const passwordMatch = await bcrypt.compare(
-            password,
-            user.password
-        );
+        const passwordMatch = await bcrypt.compare(password, user.password);
 
         if (!passwordMatch) {
             return res.status(401).json({
@@ -104,52 +99,110 @@ const LoginController = async (req, res) => {
         }
 
         const token = jwt.sign(
-            {
-                id: user._id,
-                role: user.role
-            },
+            { id: user._id, role: user.role },
             process.env.JWT_SECRET,
-            {
-                expiresIn: "30d"
-            }
+            { expiresIn: "30d" }
         );
 
-        console.log("Generated JWT token:", token);
+        user.password = undefined; // strip before sending
 
         res.cookie("accessToken", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 30 * 24 * 60 * 60 * 1000
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 30 * 24 * 60 * 60 * 1000,
         });
 
         return res.status(200).json({
             success: true,
             message: "Login successful",
-            user
+            user,
         });
 
     } catch (err) {
-
-        const message =
-            err instanceof Error
-                ? err.message
-                : "Unknown error";
-
+        const message = err instanceof Error ? err.message : "Unknown error";
         return res.status(500).json({
             message: "Login failed",
             error: message
         });
     }
 };
+// const LoginController = async (req, res) => {
+//     console.log("LoginController called with body:", req.body);
+
+//     try {
+//         const { email, password } = req.body;
+
+//         if (!email || !password) {
+//             return res.status(400).json({
+//                 message: "Email and password are required"
+//             });
+//         }
+
+//         const user = await User.findOne({ email });
+
+//         if (!user) {
+//             return res.status(401).json({
+//                 message: "Invalid email or password"
+//             });
+//         }
+
+//         const passwordMatch = await bcrypt.compare(
+//             password,
+//             user.password
+//         );
+
+//         if (!passwordMatch) {
+//             return res.status(401).json({
+//                 message: "Invalid email or password"
+//             });
+//         }
+
+//         if (!process.env.JWT_SECRET) {
+//             throw new Error("JWT_SECRET is missing");
+//         }
+
+//         const token = jwt.sign(
+//             {
+//                 id: user._id,
+//                 role: user.role
+//             },
+//             process.env.JWT_SECRET,
+//             {
+//                 expiresIn: "30d"
+//             }
+//         );
+
+//         console.log("Generated JWT token:", token);
+
+//         return res.status(200).json({
+//             success: true,
+//             message: "Login successful",
+//             token
+//         });
+
+//     } catch (err) {
+
+//         const message =
+//             err instanceof Error
+//                 ? err.message
+//                 : "Unknown error";
+
+//         return res.status(500).json({
+//             message: "Login failed",
+//             error: message
+//         });
+//     }
+// };
 const getProfile = async (req, res) => {
     try {
-        const userEmail = req.user.email;
-        if (!userEmail) {
+        const email = req.user.email;
+        if (!email) {
             console.log("user email not founded")
         }
         const user = await User.findOne({
-            userEmail
+            email
+
         });
         if (user) {
             const profileData = {
@@ -172,5 +225,5 @@ const getProfile = async (req, res) => {
 }
 
 
-export default { RegistrationController, LoginController };
+export default { RegistrationController, LoginController, getProfile };
 
