@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import React from 'react';
+import { useCart } from './CartContext';
 import {
     Compass,
     Plus,
@@ -12,75 +13,14 @@ import {
     User
 } from 'lucide-react';
 
-// Define the shape of a manifest item
-interface ManifestItem {
-    id: number;
-    name: string;
-    category: string;
-    description: string;
-    price: number;
-    currency: string;
-    quantity: number;
-    image: string;
-}
-
 export default function Cartpage(): React.JSX.Element {
     const navigate = useNavigate();
-    // Initial Gear State with TypeScript typing
-    const [manifestItems, setManifestItems] = useState<ManifestItem[]>([
-        {
-            id: 1,
-            name: "Brass Navigator Compass",
-            category: "Navigation",
-            description: "Essential navigation tool, reliable in harsh conditions.",
-            price: 45,
-            currency: "G",
-            quantity: 1,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDGtF_3_gmiS6WhAcuBcPHznsN4rwSPiGYtyBQAe7XqBVA8zt4kkmgXb0O043d_HaL0FYeAnILGcYF2e4l1BIoKCvOPCKRXv7n48_NSAB51OsFlYj6DvU_GyVKlKIwYZi2k234PuSi9RH2iZxIJPHm0UC9ZSNDYNYPVpZLtfUQQ5X0F4cenXTy5yylrgAOiJcHvdmV3lSF43YAqR_PrazZQa7oBb0uPjf3YIURcWBKOC5DSMiK71g"
-        },
-        {
-            id: 2,
-            name: "Weatherproof Journal",
-            category: "Cartography",
-            description: "Document discoveries, rain or shine.",
-            price: 20,
-            currency: "G",
-            quantity: 2,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAvv6c9QNswdAtFU_XzXk-93RBeDrDBwcFWCRAk_RLS6t6EfB-4ZdhXlQCQsKTBEZgDvRCvb5Rq4Ets4BE7quM0DB0RTn4oYXdep5Vvu7UcbHnUMgC4OWOw7BNRcLSXdCcvjVdx0w8HE3J_zmfYfT_xKXQOX1xGPnOb32kTl6gvmm9AAyCVTOt2SMASrNoLCsOHMrqBl8aBUkn8oUDPJPNvyieiyyuLaEKMt3CrOd-mgDgKhzce_A"
-        },
-        {
-            id: 3,
-            name: "Expedition Rucksack 40L",
-            category: "Storage",
-            description: "Durable carry-all for artifacts and supplies.",
-            price: 75,
-            currency: "G",
-            quantity: 1,
-            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBQKrsECZten2VCAQDU47DMrpidOTvLO__Nrc79xu-SuNKqJuqY-8-xDJXp-K2KsX0tHThZYGoI7TkeRZ6c4KgCevuB3nEhn28ab2mAvkK1mJ3Xo7f2acm6EIAw1hUfrqUNLRenBCc0erfY_YNRYX7h5uHW_UbIidCOIgDcU3kHOW13pKZZ-fKy-n2ospfDpW_WChOnA2i8bdcuOOXGUY-AZNygAleQGXj01Ii95tmh6JK44jTTyg"
-        }
-    ]);
+    const { cartItems: manifestItems, updateQuantity, removeFromCart: removeItem, cartTotal: subtotal } = useCart();
 
     const courierFee: number = 15;
 
-    // Handle Quantity Change
-    const updateQuantity = (id: number, delta: number): void => {
-        setManifestItems(prev => prev.map(item => {
-            if (item.id === id) {
-                const newQty = item.quantity + delta;
-                return newQty > 0 ? { ...item, quantity: newQty } : item;
-            }
-            return item;
-        }));
-    };
-
-    // Handle Item Removal
-    const removeItem = (id: number): void => {
-        setManifestItems(prev => prev.filter(item => item.id !== id));
-    };
-
     // Calculations
-    const subtotal: number = manifestItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const currencySymbol: string = manifestItems[0]?.currency || "G";
+    const currencySymbol: string = manifestItems[0]?.currency || "₹"; // or use whatever default currency you want
     const totalOffering: number = subtotal > 0 ? subtotal + courierFee : 0;
 
     return (

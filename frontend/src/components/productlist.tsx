@@ -1,5 +1,5 @@
-
 import React, { useState, useMemo } from 'react';
+import { useCart } from './CartContext';
 
 // Define Product interface
 interface Product {
@@ -109,7 +109,7 @@ export default function ProductList() {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState<string>('All');
     const [sortBy, setSortBy] = useState<string>('price-low');
-    const [cartCount, setCartCount] = useState<number>(0);
+    const { addToCart, cartCount } = useCart();
 
     const categories = ['All', 'Navigation', 'Storage', 'Illumination'];
 
@@ -261,7 +261,7 @@ export default function ProductList() {
                                         </span>
                                         {product.inStock ? (
                                             <button
-                                                onClick={() => setCartCount(prev => prev + 1)}
+                                                onClick={() => addToCart(product)}
                                                 className="bg-[#77574d] text-white px-5 py-2 rounded-lg font-['Space_Grotesk'] text-[14px] font-bold shadow-[0_8px_20px_rgba(119,87,77,0.12),inset_0_1px_0_rgba(255,255,255,0.4)] hover:bg-[#5d4037] transition-colors active:scale-95 flex items-center gap-2"
                                             >
                                                 Add to Manifest

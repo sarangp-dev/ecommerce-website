@@ -1,13 +1,24 @@
 import { useNavigate } from 'react-router-dom'
 import './home-mod.css'
 import { useState, useCallback, useEffect, type MouseEvent } from 'react'
+import { useCart } from './CartContext'
 import axios from "axios";
-
 const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
-const initialProducts = [
+type Product = {
+    id: number | string;
+    name: string;
+    price: number;
+    originalPrice?: number | null;
+    tag?: string;
+    tagColor?: string;
+    category: string;
+    image: string;
+    description: string;
+};
+const initialProducts: Product[] = [
     {
         id: 1,
         name: 'Nebula Pro Headphones',
@@ -690,16 +701,20 @@ function ProductCard({
     product,
     onAddToCart
 }: {
-    product: any;
-    onAddToCart: () => void;
+    product: Product;
+    onAddToCart: (product: Product) => void;
 }) {
     const { tilt, transition, onMouseMove, onMouseLeave } = useTilt(13)
     const [added, setAdded] = useState(false)
 
     const handleAdd = () => {
-        onAddToCart()
+        onAddToCart(product)
+
         setAdded(true)
-        setTimeout(() => setAdded(false), 2000)
+
+        setTimeout(() => {
+            setAdded(false)
+        }, 2000)
     }
 
     return (
@@ -867,7 +882,7 @@ function ProductsSection({
     onAddToCart
 }: {
     products: any[];
-    onAddToCart: () => void;
+    onAddToCart: (product: any) => void;
 }) {
     const [filter, setFilter] = useState('All');
 
@@ -1099,7 +1114,13 @@ function CategoriesSection() {
 
 // ─── Spotlight ────────────────────────────────────────────────────────────────
 
-function SpotlightSection({ onAddToCart }: { onAddToCart: () => void }) {
+function SpotlightSection({
+    product,
+    onAddToCart
+}: {
+    product: Product;
+    onAddToCart: (product: Product) => void;
+}) {
     const [activeSpec, setActiveSpec] = useState(0)
     const specs = [
         { label: 'Noise Cancellation', value: '98.4%' },
@@ -1307,7 +1328,7 @@ function SpotlightSection({ onAddToCart }: { onAddToCart: () => void }) {
                         </div>
                     </div>
                     <button
-                        onClick={onAddToCart}
+                        onClick={() => onAddToCart(product)}
                         style={{
                             flex: 1,
                             background: `linear-gradient(135deg, ${C.gold}, ${C.goldDark})`,
@@ -1751,13 +1772,17 @@ function Footer() {
         </footer>
     )
 }
+function cartpage() {
+    return (<div>
+
+    </div>)
+}
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 export default function HomeMod() {
-    const [cartCount, setCartCount] = useState(0)
-    const [products, setProducts] = useState(initialProducts);
-    const addToCart = useCallback(() => setCartCount((n) => n + 1), [])
+    const { addToCart, cartCount } = useCart();
+    const [products, setProducts] = useState<Product[]>(initialProducts);
     const getproducts = async () => {
         try {
             const res = await axios.get(`${API_URL_PRODUCT}/getproducts`);
@@ -1784,7 +1809,12 @@ export default function HomeMod() {
                 onAddToCart={addToCart}
             />
             <CategoriesSection />
-            <SpotlightSection onAddToCart={addToCart} />
+            {products.length > 0 && (
+                <SpotlightSection
+                    product={products[0]}
+                    onAddToCart={addToCart}
+                />
+            )}
             <TestimonialsSection />
             <CTASection />
             <Footer />
