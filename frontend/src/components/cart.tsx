@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import axios from "axios";
 import { useCart } from './CartContext';
+
+const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 import {
     Compass,
     Plus,
@@ -14,6 +17,37 @@ import {
 } from 'lucide-react';
 
 export default function Cartpage(): React.JSX.Element {
+    const handlePayment = async () => {
+        try {
+
+            if (manifestItems.length === 0) {
+                return;
+            }
+
+            const response = await axios.post(
+                `${API_URL_PRODUCT}/create-payment-intent`,
+                {
+                    items: manifestItems.map((item) => ({
+                        product: item.id,
+                        quantity: item.quantity,
+                    })),
+                }
+            );
+
+            if (response.data.success) {
+                window.location.href = response.data.url;
+            }
+
+        } catch (error) {
+
+            console.error(
+                "Payment error:",
+                error
+            );
+
+            alert("Unable to start payment");
+        }
+    };
     const navigate = useNavigate();
     const { cartItems: manifestItems, updateQuantity, removeFromCart: removeItem, cartTotal: subtotal } = useCart();
 
@@ -159,6 +193,7 @@ export default function Cartpage(): React.JSX.Element {
 
                             {/* Desktop CTA Button */}
                             <button
+                                onClick={handlePayment}
                                 disabled={manifestItems.length === 0}
                                 className="hidden lg:flex w-full mt-8 bg-[#d4af37] text-[#554300] font-semibold py-4 rounded-xl shadow-md hover:bg-[#735c00] hover:text-white transition-all active:scale-[0.98] items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -178,6 +213,7 @@ export default function Cartpage(): React.JSX.Element {
             {/* Sticky Bottom Action Bar (Optimized for Mobile Viewports) */}
             <div className="lg:hidden fixed bottom-0 left-0 w-full p-4 bg-[#fff8f0]/95 backdrop-blur-md border-t border-[#d0c5af]/30 z-50 shadow-lg">
                 <button
+                    onClick={handlePayment}
                     disabled={manifestItems.length === 0}
                     className="w-full bg-[#d4af37] text-[#554300] font-semibold py-3.5 rounded-xl shadow-md hover:bg-[#735c00] hover:text-white transition-all active:scale-[0.98] flex justify-center items-center gap-2 disabled:opacity-50"
                 >

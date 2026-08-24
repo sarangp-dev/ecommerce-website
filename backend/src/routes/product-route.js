@@ -19,5 +19,11 @@ router.put(
     controller.editProduct
 );
 router.delete("/deleteproduct/:id", authMiddleware, adminOnly, controller.deleteProduct);
+router.post('/create-payment-intent', controller.paymentWithStripe);
+router.post(
+    "/webhook",
+    express.raw({ type: "application/json" }),
+    controller.stripeWebhook
+);
 
 export default router;

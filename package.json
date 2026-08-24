@@ -12,6 +12,7 @@
   "dependencies": {
     "cloudinary": "^2.10.0",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.2.0"
+    "multer": "^2.2.0",
+    "stripe": "^22.5.0"
   }
 }

@@ -1,5 +1,258 @@
 import Products from "../models/product.js";
 import { v2 as cloudinary } from "cloudinary";
+import Stripe from "stripe";
+import Order from "../models/payment.js";
+// Initialize Stripe with your secret key from environment variables
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+const paymentWithStripe = async (req, res) => {
+    try {
+        console.log("Stripe payment request:", req.body);
+
+        const { items, userId } = req.body;
+
+        if (!items || !Array.isArray(items) || items.length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Cart is empty",
+            });
+        }
+
+        const lineItems = [];
+        const orderItems = [];
+
+        let totalAmount = 0;
+
+        for (const item of items) {
+
+            const productId = item.product || item.id;
+
+            const product = await Products.findById(productId);
+
+            if (!product) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Product not found",
+                });
+            }
+
+            const quantity = Number(item.quantity);
+
+            if (!Number.isInteger(quantity) || quantity <= 0) {
+                return res.status(400).json({
+                    success: false,
+                    message: "Invalid quantity",
+                });
+            }
+
+            // Check stock
+            if (product.quantity < quantity) {
+                return res.status(400).json({
+                    success: false,
+                    message:
+                        `${product.productName} has only ${product.quantity} items available`,
+                });
+            }
+
+            const price = Number(product.productPrice);
+
+            totalAmount += price * quantity;
+
+            // Stripe item
+            lineItems.push({
+                price_data: {
+                    currency: "inr",
+
+                    product_data: {
+                        name: product.productName,
+                    },
+
+                    unit_amount: Math.round(price * 100),
+                },
+
+                quantity: quantity,
+            });
+
+            // Save this information for webhook
+            orderItems.push({
+                product: product._id.toString(),
+                name: product.productName,
+                quantity: quantity,
+                price: price,
+            });
+        }
+
+        // Add your delivery fee
+        const deliveryFee = 15;
+
+        totalAmount += deliveryFee;
+
+        // Add delivery fee to Stripe
+        lineItems.push({
+            price_data: {
+                currency: "inr",
+
+                product_data: {
+                    name: "Delivery Fee",
+                },
+
+                unit_amount: deliveryFee * 100,
+            },
+
+            quantity: 1,
+        });
+
+        // Create Stripe checkout
+        const session = await stripe.checkout.sessions.create({
+            line_items: lineItems,
+
+            mode: "payment",
+
+            metadata: {
+                userId: userId || "",
+                items: JSON.stringify(orderItems),
+                amount: totalAmount.toString(),
+            },
+
+            success_url:
+                "https://yuthi-ecommerce.vercel.app/payment-success?session_id={CHECKOUT_SESSION_ID}",
+
+            cancel_url:
+                "https://yuthi-ecommerce.vercel.app/payment-cancel",
+        });
+
+        console.log(
+            "Stripe session created:",
+            session.id
+        );
+
+        return res.status(200).json({
+            success: true,
+            url: session.url,
+        });
+
+    } catch (error) {
+
+        console.error("Stripe error:", error);
+
+        return res.status(500).json({
+            success: false,
+            message: "Stripe payment failed",
+            error: error.message,
+        });
+    }
+};
+
+
+const stripeWebhook = async (req, res) => {
+    const sig = req.headers["stripe-signature"];
+
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+    } catch (error) {
+        console.error(
+            "Webhook verification failed:",
+            error.message
+        );
+
+        return res.status(400).send(
+            `Webhook Error: ${error.message}`
+        );
+    }
+
+    try {
+
+        if (event.type === "checkout.session.completed") {
+
+            const session = event.data.object;
+
+            console.log(
+                "Payment successful:",
+                session.id
+            );
+
+            // Prevent duplicate orders
+            const existingOrder = await Order.findOne({
+                stripePaymentId: session.id,
+            });
+
+            if (existingOrder) {
+                console.log("Order already exists");
+                return res.status(200).json({
+                    received: true,
+                });
+            }
+
+            // Get information from Stripe metadata
+            const items = JSON.parse(
+                session.metadata.items
+            );
+
+            const amount = Number(
+                session.metadata.amount
+            );
+
+            const userId =
+                session.metadata.userId || undefined;
+
+            // Create order
+            const order = await Order.create({
+                user: userId,
+
+                items: items,
+
+                amount: amount,
+
+                paymentStatus: "paid",
+
+                stripePaymentId: session.id,
+            });
+
+            console.log(
+                "Order saved:",
+                order._id
+            );
+
+            // Reduce stock
+            for (const item of items) {
+
+                await Products.findByIdAndUpdate(
+                    item.product,
+                    {
+                        $inc: {
+                            quantity: -item.quantity,
+                        },
+                    }
+                );
+            }
+
+            console.log("Stock updated");
+        }
+
+        return res.status(200).json({
+            received: true,
+        });
+
+    } catch (error) {
+
+        console.error(
+            "Webhook error:",
+            error
+        );
+
+        return res.status(500).json({
+            success: false,
+            message: "Webhook processing failed",
+        });
+    }
+};
+
 
 const uploadToCloudinary = (buffer) => {
     return new Promise((resolve, reject) => {
@@ -242,5 +495,10 @@ const deleteProduct = async (req, res) => {
 };
 
 export default {
-    addProduct, getAllProducts, editProduct, deleteProduct
+    addProduct,
+    getAllProducts,
+    editProduct,
+    deleteProduct,
+    paymentWithStripe,
+    stripeWebhook,
 };
