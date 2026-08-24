@@ -13,7 +13,7 @@ import InitializeNewproduct from './admin/addproduct'
 import Cartpage from './components/cart'
 import Profile from './components/profile'
 import ProductList from './components/productlist';
-
+import PaymentSuccess from './components/PaymentSuccess'
 
 function App() {
 
@@ -25,6 +25,10 @@ function App() {
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<HomeMod />} />
+              <Route
+                path="/payment-success"
+                element={<PaymentSuccess />}
+              />
               <Route path='/home' element={<Home />} />
               <Route path='/landing3d' element={<Landing3D />} />
               <Route path='/test' element={<Test />} />
