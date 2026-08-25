@@ -18,8 +18,9 @@ import {
 } from 'lucide-react';
 
 export default function Cartpage(): React.JSX.Element {
+    const navigate = useNavigate();
     const handlePayment = async () => {
-        const navigate = useNavigate();
+
         try {
 
             if (manifestItems.length === 0) {
@@ -37,7 +38,7 @@ export default function Cartpage(): React.JSX.Element {
             );
 
             if (response.data.success) {
-                navigate(response.data.url);
+                window.location.href = response.data.url;
             }
 
         } catch (error) {
@@ -50,7 +51,7 @@ export default function Cartpage(): React.JSX.Element {
             alert("Unable to start payment");
         }
     };
-    const navigate = useNavigate();
+
     const { cartItems: manifestItems, updateQuantity, removeFromCart: removeItem, cartTotal: subtotal } = useCart();
 
     const courierFee: number = 15;
