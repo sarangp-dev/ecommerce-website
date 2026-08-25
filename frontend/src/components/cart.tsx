@@ -3,6 +3,7 @@ import React from 'react';
 import axios from "axios";
 import { useCart } from './CartContext';
 
+
 const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 import {
     Compass,
@@ -18,6 +19,7 @@ import {
 
 export default function Cartpage(): React.JSX.Element {
     const handlePayment = async () => {
+        const navigate = useNavigate();
         try {
 
             if (manifestItems.length === 0) {
@@ -35,7 +37,7 @@ export default function Cartpage(): React.JSX.Element {
             );
 
             if (response.data.success) {
-                window.location.href = response.data.url;
+                navigate(response.data.url);
             }
 
         } catch (error) {
