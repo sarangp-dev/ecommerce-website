@@ -19,7 +19,16 @@ router.put(
     controller.editProduct
 );
 router.delete("/deleteproduct/:id", authMiddleware, adminOnly, controller.deleteProduct);
-router.post('/create-payment-intent', controller.paymentWithStripe);
+// router.post('/create-payment-intent', controller.paymentWithStripe);
+router.post("/create-payment-intent", (req, res) => {
+    console.log("🔥 PAYMENT ROUTE HIT ON RENDER");
+    console.log("BODY:", req.body);
+
+    return res.status(200).json({
+        success: true,
+        message: "Payment route works"
+    });
+});
 router.post(
     "/webhook",
     express.raw({ type: "application/json" }),
