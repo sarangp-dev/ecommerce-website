@@ -26,5 +26,5 @@ router.post(
     express.raw({ type: "application/json" }),
     controller.stripeWebhook
 );
-
+router.post('/payment-success', controller.verifyPaymentSession);
 export default router;

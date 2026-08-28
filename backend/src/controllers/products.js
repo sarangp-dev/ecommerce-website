@@ -253,6 +253,28 @@ const stripeWebhook = async (req, res) => {
     }
 };
 
+const verifyPaymentSession = async (req, res) => {
+    try {
+        const { sessionId } = req.body;
+        if (!sessionId) {
+            return res.status(400).json({ success: false, message: "Session ID is required" });
+        }
+
+        // Retrieve the session straight from Stripe
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+
+        if (session && session.payment_status === "paid") {
+            return res.status(200).json({ success: true, message: "Payment verified successfully" });
+        } else {
+            return res.status(400).json({ success: false, message: "Payment is not completed yet" });
+        }
+    } catch (error) {
+        console.error("Verification error:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// Make sure to export verifyPaymentSession along with your other controller functions!
 
 const uploadToCloudinary = (buffer) => {
     return new Promise((resolve, reject) => {
@@ -501,4 +523,5 @@ export default {
     deleteProduct,
     paymentWithStripe,
     stripeWebhook,
+    verifyPaymentSession
 };
