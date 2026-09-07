@@ -282,6 +282,8 @@ function Login({ onSwitch, role, activeField, setActiveField }: AuthProps) {
                 });
             if (response.status === 200 || response.status === 201) {
                 console.log('Login successful:', response.data);
+                const { token } = response.data;
+                localStorage.setItem('token', token);
                 // Handle successful login, e.g., redirect or show a success message
             }
         } catch (error) {
