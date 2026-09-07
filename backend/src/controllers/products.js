@@ -274,7 +274,6 @@ const verifyPaymentSession = async (req, res) => {
     }
 };
 
-// Make sure to export verifyPaymentSession along with your other controller functions!
 
 const uploadToCloudinary = (buffer) => {
     return new Promise((resolve, reject) => {

@@ -4,6 +4,13 @@ import axios from 'axios';
 
 const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
+const navLinks = [
+    { label: 'Dashboard', icon: 'space_dashboard', active: false },
+    { label: 'Products', icon: 'inventory_2', active: true },
+    { label: 'Orders', icon: 'shopping_cart', active: false },
+    { label: 'Reports', icon: 'bar_chart', active: false },
+    { label: 'Customers', icon: 'groups', active: false },
+];
 interface ProductItem {
     id: string;
     name: string;
