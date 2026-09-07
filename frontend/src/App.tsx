@@ -14,8 +14,19 @@ import Cartpage from './components/cart'
 import Profile from './components/profile'
 import ProductList from './components/productlist';
 import PaymentSuccess from './components/PaymentSuccess'
+import { use, useState } from 'react'
+import axios from 'axios'
 
 function App() {
+  const [user, setUser] = useState();
+  const access = async () => {
+    try {
+      const response = await axios.get("user");
+    }
+    catch (err) {
+      console.log("something went wrong ")
+    }
+  }
 
 
   return (
