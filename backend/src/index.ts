@@ -11,6 +11,7 @@ import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import controller from "./controllers/products.js"; // Import controller for webhook
 
+
 const allowedOrigins = (process.env.FRONTEND_URL || "")
     .split(",")
     .map(origin => origin.trim());
@@ -45,6 +46,7 @@ app.use(cookieParser());
 
 app.use("/api/user", userRoutes);
 app.use("/api/product", productRoutes);
+
 app.use('/uploads', express.static('uploads'));
 
 app.get("/", (req: Request, res: Response) => {

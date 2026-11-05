@@ -2,6 +2,10 @@ import express from "express";
 import controller from "../controllers/products.js";
 import { uploadProductPhoto } from "../middleware/uploadProductPhoto.js";
 import { authMiddleware, adminOnly } from "../middleware/authmiddleware.js";
+// Point this to your actual controller file filename (e.g., product.js or payment.js)
+import controllers from '../controllers/orderController.js';
+
+
 
 const router = express.Router();
 
@@ -27,4 +31,10 @@ router.post(
     controller.stripeWebhook
 );
 router.post('/payment-success', controller.verifyPaymentSession);
+
+
+
+router.get('/getorders', controllers.getAllOrders);
+router.put('/orders/:id/status', controllers.updateOrderStatus);
+
 export default router;

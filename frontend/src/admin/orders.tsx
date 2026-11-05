@@ -27,7 +27,7 @@ import {
     Calendar
 } from "lucide-react";
 
-const API_URL_ORDER = import.meta.env.VITE_API_URL_ORDER || 'http://localhost:5000/api/orders';
+const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT
 
 const navLinks = [
     { label: 'Dashboard', icon: LayoutDashboard, active: false },
@@ -148,51 +148,26 @@ export const YuthiOrdersDashboard: React.FC = () => {
     const getAllOrders = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${API_URL_ORDER}/getorders`, {
+            const response = await axios.get(`${API_URL_PRODUCT}/getorders`, {
                 withCredentials: true,
             });
-            setOrders(response.data.orders || []);
+
+
+
+            // Handle if response.data is an array directly vs an object containing orders
+            const ordersData = Array.isArray(response.data) ? response.data : response.data.orders;
+            setOrders(ordersData || []);
+            console.log(ordersData)
         } catch (error) {
             console.error("Error fetching orders:", error);
-            // Fallback mock data if backend isn't linked yet for testing UI
-            setOrders([
-                {
-                    id: "ord_001",
-                    orderNumber: "YT-84920",
-                    customerName: "Sarang P",
-                    customerEmail: "sarang@example.com",
-                    shippingAddress: "Edacheri North, Kozhikode, Kerala 673502",
-                    items: [
-                        { productId: "p1", name: "Operation Chimera Jacket", quantity: 1, price: 149.99 },
-                        { productId: "p2", name: "Cyber Silk Tee", quantity: 2, price: 45.00 }
-                    ],
-                    totalAmount: 239.99,
-                    paymentStatus: "Paid",
-                    orderStatus: "Processing",
-                    createdAt: "2026-11-04T10:30:00Z"
-                },
-                {
-                    id: "ord_002",
-                    orderNumber: "YT-84921",
-                    customerName: "Ananya Menon",
-                    customerEmail: "ananya@example.com",
-                    shippingAddress: "MG Road, Kochi, Kerala 682016",
-                    items: [
-                        { productId: "p3", name: "Neumorphic Wallet", quantity: 1, price: 65.50 }
-                    ],
-                    totalAmount: 65.50,
-                    paymentStatus: "Paid",
-                    orderStatus: "Shipped",
-                    createdAt: "2026-11-03T14:15:00Z"
-                }
-            ]);
+            // Fallback mock data...
         } finally {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         getAllOrders();
+
     }, []);
 
     const filteredOrders = orders.filter(
@@ -209,7 +184,7 @@ export const YuthiOrdersDashboard: React.FC = () => {
             setActionLoading(true);
 
             await axios.put(
-                `${API_URL_ORDER}/updateorderstatus/${orderId}`,
+                `${API_URL_PRODUCT}/updateorderstatus/${orderId}`,
                 { orderStatus: newStatus },
                 { withCredentials: true }
             );

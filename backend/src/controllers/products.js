@@ -5,6 +5,66 @@ import Order from "../models/payment.js";
 // Initialize Stripe with your secret key from environment variables
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+
+export const getAllOrders = async (req, res) => {
+    try {
+        // Fetch orders from MongoDB, sorted by newest first
+        const orders = await Order.find().sort({ createdAt: -1 });
+
+        // Map them to match the exact frontend interface structure if needed
+        const formattedOrders = orders.map((order) => ({
+            id: order._id,
+            orderNumber: order.orderNumber || `YT-${Math.floor(10000 + Math.random() * 90000)}`,
+            customerName: order.customerName || "Valued Customer",
+            customerEmail: order.customerEmail || "customer@example.com",
+            shippingAddress: order.shippingAddress || "Shipping address on file",
+            items: order.items || [],
+            totalAmount: order.amount || 0,
+            paymentStatus: order.paymentStatus === "paid" ? "Paid" : "Pending",
+            orderStatus: order.orderStatus || "Processing",
+            createdAt: order.createdAt,
+        }));
+
+        return res.status(200).json({
+            success: true,
+            orders: formattedOrders,
+        });
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Failed to fetch orders",
+            error: error.message,
+        });
+    }
+};
+
+// Update order status endpoint
+export const updateOrderStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { orderStatus } = req.body;
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            id,
+            { orderStatus },
+            { new: true }
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ success: false, message: "Order not found" });
+        }
+
+        return res.status(200).json({
+            success: true,
+            message: "Order status updated successfully",
+            updatedOrder,
+        });
+    } catch (error) {
+        console.error("Error updating order status:", error);
+        return res.status(500).json({ success: false, message: error.message });
+    }
+};
 const paymentWithStripe = async (req, res) => {
     try {
         console.log("Stripe payment request:", req.body);
