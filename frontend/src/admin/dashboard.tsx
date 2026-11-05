@@ -72,7 +72,7 @@ export const YuthiAdminDashboardreal: React.FC = () => {
         <div className="bg-[#FFF8F0] text-[#3D404C] font-sans selection:bg-[#D4AF37]/20 selection:text-[#3D404C] min-h-screen">
 
 
-            \
+
 
             {/* Main Content Area  flex-1 md:ml-[260px] p-8 overflow-x-hidden"*/}
             <main className="flex-1  p-8 overflow-x-hidden">
