@@ -2,6 +2,18 @@ import axios from 'axios';
 import React from 'react';
 const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
+import {
+    Rocket,
+    Timer,
+    Users,
+    ChartNoAxesCombined,
+    CircleHelp,
+    ArrowRight,
+    ChevronDown,
+    Menu,
+} from "lucide-react";
+
+
 export default function InitializeNewproduct(): React.JSX.Element {
     const [formData, setFormData] = React.useState({
         productName: '',
@@ -107,7 +119,7 @@ export default function InitializeNewproduct(): React.JSX.Element {
                         href="#"
                     >
                         <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                            rocket_launch
+                            <Rocket />
                         </span>
                         <span className="text-sm font-semibold tracking-wider">Basics</span>
                     </a>
@@ -115,14 +127,14 @@ export default function InitializeNewproduct(): React.JSX.Element {
                         className="flex items-center gap-4 px-4 py-3 text-[#4a463f] hover:text-[#181b26] hover:bg-black/5 rounded-lg transition-colors duration-200"
                         href="#"
                     >
-                        <span className="material-symbols-outlined">shutter_speed</span>
+                        <span className="material-symbols-outlined"><Timer /></span>
                         <span className="text-sm font-semibold tracking-wider">Timeline</span>
                     </a>
                     <a
                         className="flex items-center gap-4 px-4 py-3 text-[#4a463f] hover:text-[#181b26] hover:bg-black/5 rounded-lg transition-colors duration-200"
                         href="#"
                     >
-                        <span className="material-symbols-outlined">groups</span>
+                        <span className="material-symbols-outlined"><Users /></span>
                         <span className="text-sm font-semibold tracking-wider">Team</span>
                     </a>
                 </div>
@@ -132,14 +144,14 @@ export default function InitializeNewproduct(): React.JSX.Element {
                         className="flex items-center gap-4 px-4 py-3 text-[#4a463f] hover:text-[#181b26] hover:bg-black/5 rounded-lg transition-colors duration-200"
                         href="#"
                     >
-                        <span className="material-symbols-outlined">analytics</span>
+                        <span className="material-symbols-outlined">	<ChartNoAxesCombined /></span>
                         <span className="text-sm font-semibold tracking-wider">System Status</span>
                     </a>
                     <a
                         className="flex items-center gap-4 px-4 py-3 text-[#4a463f] hover:text-[#181b26] hover:bg-black/5 rounded-lg transition-colors duration-200"
                         href="#"
                     >
-                        <span className="material-symbols-outlined">help_center</span>
+                        <span className="material-symbols-outlined">	<CircleHelp /></span>
                         <span className="text-sm font-semibold tracking-wider">Help</span>
                     </a>
                 </div>
@@ -148,7 +160,7 @@ export default function InitializeNewproduct(): React.JSX.Element {
                     <button className="w-full py-3 bg-white text-[#181b26] border border-[#7b766e] hover:border-[#D4AF37] transition-all duration-300 text-sm font-semibold rounded flex items-center justify-center gap-2 group cursor-pointer">
                         Deploy product
                         <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">
-                            arrow_forward
+                            <ArrowRight />
                         </span>
                     </button>
                 </div>
@@ -159,7 +171,7 @@ export default function InitializeNewproduct(): React.JSX.Element {
                 <header className="md:hidden fixed top-0 w-full z-50 flex justify-between items-center px-5 h-20 bg-[#FFF8F0]/90 backdrop-blur-md border-b border-[#ccc6bc]/30 left-0">
                     <div className="font-serif text-[24px] tracking-tight text-[#181b26]">NEURAL_FLOW</div>
                     <button className="text-[#4a463f] hover:text-[#625e58]">
-                        <span className="material-symbols-outlined">menu</span>
+                        <span className="material-symbols-outlined"><Menu /></span>
                     </button>
                 </header>
 
@@ -211,7 +223,7 @@ export default function InitializeNewproduct(): React.JSX.Element {
                                         <option value="omega">Omega Level</option>
                                     </select>
                                     <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-[#4a463f] pointer-events-none">
-                                        expand_more
+                                        <ChevronDown />
                                     </span>
                                 </div>
                             </div>

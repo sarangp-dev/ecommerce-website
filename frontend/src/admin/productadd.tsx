@@ -1,16 +1,40 @@
+//this is the main page 
+
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-
+import {
+    LayoutDashboard,
+    Package,
+    ShoppingCart,
+    BarChart3,
+    Users,
+    Settings,
+    Bell,
+    Search,
+    Plus,
+    Minus,
+    Edit,
+    Trash2,
+    X,
+    TrendingUp,
+    ChevronDown,
+    ArrowRight,
+    Loader2,
+    Filter,
+    Menu,
+    DollarSign,
+} from "lucide-react";
 
 const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
 const navLinks = [
-    { label: 'Dashboard', icon: 'space_dashboard', active: false },
-    { label: 'Products', icon: 'inventory_2', active: true },
-    { label: 'Orders', icon: 'shopping_cart', active: false },
-    { label: 'Reports', icon: 'bar_chart', active: false },
-    { label: 'Customers', icon: 'groups', active: false },
+    { label: 'Dashboard', icon: LayoutDashboard, active: false },
+    { label: 'Products', icon: Package, active: true },
+    { label: 'Orders', icon: ShoppingCart, active: false },
+    { label: 'Reports', icon: BarChart3, active: false },
+    { label: 'Customers', icon: Users, active: false },
 ];
+
 interface ProductItem {
     id: string;
     name: string;
@@ -188,14 +212,6 @@ export const YuthiAdminDashboard: React.FC = () => {
             (item.sku && item.sku.toLowerCase().includes(searchTerm.toLowerCase()))
     );
 
-    const navLinks = [
-        { label: 'Dashboard', icon: 'dashboard', active: false },
-        { label: 'Products', icon: 'inventory_2', active: true },
-        { label: 'Orders', icon: 'shopping_cart', active: false },
-        { label: 'Reports', icon: 'analytics', active: false },
-        { label: 'Customers', icon: 'people', active: false },
-    ];
-
     // Handle Delete Product with GlobalLoader State
     const handleDeleteProduct = async (id: string) => {
         if (!window.confirm("Are you sure you want to delete this product?")) return;
@@ -323,55 +339,8 @@ export const YuthiAdminDashboard: React.FC = () => {
             {/* Global Loader Implementation */}
             <GlobalLoader isLoading={actionLoading} loadingMessage={loadingMessage} />
 
-            {/* Mobile Sidebar Overlay Backdrop */}
-            {mobileMenuOpen && (
-                <div
-                    className="fixed inset-0 bg-black/40 z-40 lg:hidden transition-opacity"
-                    onClick={() => setMobileMenuOpen(false)}
-                />
-            )}
 
-            {/* Navigation Sidebar */}
-            <aside
-                className={`fixed lg:static top-0 left-0 bottom-0 w-[260px] bg-[#F7F0E2] border-r border-[#D0C5AF] flex flex-col z-50 transform transition-transform duration-300 ease-in-out ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-                    }`}
-            >
-                <div className="h-14 flex items-center justify-between px-6 border-b border-[#D0C5AF]">
-                    <span className="text-[20px] font-semibold text-[#735C00] tracking-tight">Yuthi Admin</span>
-                    <button
-                        className="lg:hidden material-symbols-outlined text-[#696B75]"
-                        onClick={() => setMobileMenuOpen(false)}
-                    >
-                        close
-                    </button>
-                </div>
-                <nav className="flex-1 py-4 space-y-1 px-3 overflow-y-auto">
-                    {navLinks.map((link) => (
-                        <a
-                            key={link.label}
-                            href="#"
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors group ${link.active
-                                ? 'bg-[#735C00] text-[#FFF8F0] shadow-sm'
-                                : 'text-[#696B75] hover:bg-[#EEE7DA]'
-                                }`}
-                        >
-                            <span
-                                className="material-symbols-outlined text-[20px]"
-                                style={link.active ? { fontVariationSettings: "'FILL' 1" } : {}}
-                            >
-                                {link.icon}
-                            </span>
-                            <span className="font-medium text-sm">{link.label}</span>
-                        </a>
-                    ))}
-                </nav>
-                <div className="p-3 border-t border-[#D0C5AF]">
-                    <a className="flex items-center gap-3 px-3 py-2.5 text-[#696B75] hover:bg-[#EEE7DA] rounded-lg transition-colors" href="#">
-                        <span className="material-symbols-outlined text-[20px]">settings</span>
-                        <span className="font-medium text-sm">Settings</span>
-                    </a>
-                </div>
-            </aside>
+
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
@@ -379,11 +348,11 @@ export const YuthiAdminDashboard: React.FC = () => {
                 <header className="bg-[#FFF8F0] border-b border-[#D0C5AF] min-h-14 flex items-center justify-between px-4 sm:px-8 z-30 sticky top-0">
                     <div className="flex items-center gap-3 sm:gap-4">
                         <button
-                            className="lg:hidden material-symbols-outlined text-[#696B75] p-1.5 hover:bg-[#F7F0E2] rounded-lg transition-colors"
+                            className="lg:hidden text-[#696B75] p-1.5 hover:bg-[#F7F0E2] rounded-lg transition-colors"
                             onClick={() => setMobileMenuOpen(true)}
                             aria-label="Toggle menu"
                         >
-                            menu
+                            <Menu className="w-5 h-5" />
                         </button>
                         <h1 className="text-lg sm:text-[20px] font-semibold text-[#3D404C] truncate">Inventory Admin</h1>
                     </div>
@@ -391,7 +360,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                     <div className="flex items-center gap-3 sm:gap-6">
                         {/* Search Bar */}
                         <div className="relative">
-                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#696B75] text-[20px]">search</span>
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#696B75] w-5 h-5" />
                             <input
                                 className="pl-9 pr-3 py-1.5 bg-[#F7F0E2] border border-[#D0C5AF] rounded-lg text-sm w-36 sm:w-48 md:w-64 focus:ring-1 focus:ring-[#735C00] focus:border-[#735C00] outline-none transition-all text-[#3D404C] placeholder-[#696B75]"
                                 placeholder="Search inventory..."
@@ -403,8 +372,8 @@ export const YuthiAdminDashboard: React.FC = () => {
 
                         {/* Notifications & Profile */}
                         <div className="flex items-center gap-3 pl-3 sm:pl-6 border-l border-[#D0C5AF]">
-                            <button className="material-symbols-outlined text-[#696B75] p-1 hover:bg-[#F7F0E2] rounded-lg">
-                                notifications
+                            <button className="text-[#696B75] p-1 hover:bg-[#F7F0E2] rounded-lg" aria-label="Notifications">
+                                <Bell className="w-5 h-5" />
                             </button>
                             <div className="w-8 h-8 rounded-full bg-[#D0C5AF] flex items-center justify-center text-[#735C00] font-bold text-xs shrink-0">
                                 AD
@@ -425,7 +394,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                             onClick={() => setIsAddModalOpen(true)}
                             className="self-start sm:self-auto bg-[#3D5B32] text-[#FFF8F0] font-semibold text-sm px-5 py-2.5 rounded-lg flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all shadow-sm cursor-pointer"
                         >
-                            <span className="material-symbols-outlined text-[18px]">add</span>
+                            <Plus className="w-[18px] h-[18px]" />
                             <span>Add Product</span>
                         </button>
                     </div>
@@ -437,7 +406,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                             <div className="flex items-end justify-between">
                                 <span className="text-2xl sm:text-[30px] font-bold leading-none text-[#3D404C]">{products.length}</span>
                                 <span className="text-[#3D5B32] text-[12px] font-medium flex items-center gap-0.5">
-                                    <span className="material-symbols-outlined text-[14px]">trending_up</span> Live
+                                    <TrendingUp className="w-[14px] h-[14px]" /> Live
                                 </span>
                             </div>
                         </div>
@@ -465,7 +434,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                 <span className="text-2xl sm:text-[30px] font-bold leading-none text-[#3D404C]">
                                     ${products.reduce((acc, curr) => acc + ((curr.price || 0) * (curr.stock || 0)), 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                 </span>
-                                <span className="text-[#735C00] opacity-80 material-symbols-outlined">payments</span>
+                                <DollarSign className="w-5 h-5 text-[#735C00] opacity-80" />
                             </div>
                         </div>
                     </div>
@@ -474,7 +443,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                     <div className="bg-[#F7F0E2] border border-[#D0C5AF] p-3 sm:p-4 rounded-t-xl flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
                         <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                             <button className="flex items-center gap-2 border border-[#D0C5AF] px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium hover:bg-[#EEE7DA] transition-colors text-[#3D404C]">
-                                <span className="material-symbols-outlined text-[18px]">filter_list</span>
+                                <Filter className="w-[18px] h-[18px]" />
                                 Filters
                             </button>
                             <div className="hidden sm:block h-6 w-[1px] bg-[#D0C5AF]"></div>
@@ -495,7 +464,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                             <span className="text-xs text-[#696B75]">SORT BY</span>
                             <button className="text-xs sm:text-sm font-medium text-[#735C00] flex items-center gap-1">
                                 Last Updated
-                                <span className="material-symbols-outlined text-[16px]">expand_more</span>
+                                <ChevronDown className="w-4 h-4" />
                             </button>
                         </div>
                     </div>
@@ -504,7 +473,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                     <div className="bg-[#F7F0E2] border-x border-b border-[#D0C5AF] rounded-b-xl overflow-hidden shadow-sm">
                         {loading ? (
                             <div className="py-12 text-center text-[#696B75] text-sm flex items-center justify-center gap-2">
-                                <span className="material-symbols-outlined animate-spin text-[20px]">progress_activity</span>
+                                <Loader2 className="w-5 h-5 animate-spin" />
                                 Loading inventory...
                             </div>
                         ) : filteredProducts.length === 0 ? (
@@ -542,7 +511,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                             onClick={() => handleStockChange(item.id, (item.stock || 0) - 1)}
                                                             aria-label="Decrease stock"
                                                         >
-                                                            <span className="material-symbols-outlined text-[16px]">remove</span>
+                                                            <Minus className="w-4 h-4" />
                                                         </button>
                                                         <input
                                                             className="w-10 bg-transparent border-none text-center text-xs focus:ring-0 p-0 text-[#3D404C] font-semibold"
@@ -555,7 +524,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                             onClick={() => handleStockChange(item.id, (item.stock || 0) + 1)}
                                                             aria-label="Increase stock"
                                                         >
-                                                            <span className="material-symbols-outlined text-[16px]">add</span>
+                                                            <Plus className="w-4 h-4" />
                                                         </button>
                                                     </div>
                                                     <div className="flex items-center gap-1">
@@ -564,7 +533,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                             title="Edit"
                                                             onClick={() => handleEditClick(item)}
                                                         >
-                                                            <span className="material-symbols-outlined text-[18px]">edit</span>
+                                                            <Edit className="w-[18px] h-[18px]" />
                                                         </button>
                                                         <button
                                                             className="p-2 hover:bg-[#EEE7DA] hover:text-[#735C00] rounded text-[#696B75] disabled:opacity-50"
@@ -573,9 +542,9 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                             onClick={() => handleDeleteProduct(item.id)}
                                                         >
                                                             {deletingId === item.id ? (
-                                                                <span className="material-symbols-outlined text-[18px] animate-spin text-[#735C00]">progress_activity</span>
+                                                                <Loader2 className="w-[18px] h-[18px] animate-spin text-[#735C00]" />
                                                             ) : (
-                                                                <span className="material-symbols-outlined text-[18px]">delete</span>
+                                                                <Trash2 className="w-[18px] h-[18px]" />
                                                             )}
                                                         </button>
                                                     </div>
@@ -630,7 +599,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                                     className="px-2 py-1 hover:bg-[#EEE7DA] transition-colors text-[#696B75]"
                                                                     onClick={() => handleStockChange(item.id, (item.stock || 0) - 1)}
                                                                 >
-                                                                    <span className="material-symbols-outlined text-[16px]">remove</span>
+                                                                    <Minus className="w-4 h-4" />
                                                                 </button>
                                                                 <input
                                                                     className="w-12 bg-transparent border-none text-center text-[12px] focus:ring-0 p-0 text-[#3D404C] font-semibold"
@@ -642,7 +611,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                                     className="px-2 py-1 hover:bg-[#EEE7DA] transition-colors text-[#696B75]"
                                                                     onClick={() => handleStockChange(item.id, (item.stock || 0) + 1)}
                                                                 >
-                                                                    <span className="material-symbols-outlined text-[16px]">add</span>
+                                                                    <Plus className="w-4 h-4" />
                                                                 </button>
                                                             </div>
                                                             <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-tight ${item.status === 'In Stock' ? 'bg-[#3D5B32] text-[#FFF8F0]' :
@@ -659,7 +628,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                                 title="Edit"
                                                                 onClick={() => handleEditClick(item)}
                                                             >
-                                                                <span className="material-symbols-outlined text-[20px]">edit</span>
+                                                                <Edit className="w-5 h-5" />
                                                             </button>
                                                             <button
                                                                 className="p-2 hover:bg-[#EEE7DA] hover:text-[#735C00] rounded text-[#696B75] disabled:opacity-50"
@@ -668,9 +637,9 @@ export const YuthiAdminDashboard: React.FC = () => {
                                                                 onClick={() => handleDeleteProduct(item.id)}
                                                             >
                                                                 {deletingId === item.id ? (
-                                                                    <span className="material-symbols-outlined text-[20px] animate-spin text-[#735C00]">progress_activity</span>
+                                                                    <Loader2 className="w-5 h-5 animate-spin text-[#735C00]" />
                                                                 ) : (
-                                                                    <span className="material-symbols-outlined text-[20px]">delete</span>
+                                                                    <Trash2 className="w-5 h-5" />
                                                                 )}
                                                             </button>
                                                         </div>
@@ -702,9 +671,9 @@ export const YuthiAdminDashboard: React.FC = () => {
                             </div>
                             <button
                                 onClick={() => setIsAddModalOpen(false)}
-                                className="material-symbols-outlined text-[#696B75] hover:text-[#3D404C] cursor-pointer"
+                                className="text-[#696B75] hover:text-[#3D404C] cursor-pointer"
                             >
-                                close
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
 
@@ -749,9 +718,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                             <option value="Apparel">Apparel</option>
                                             <option value="Home Goods">Home Goods</option>
                                         </select>
-                                        <span className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-[#4a463f] pointer-events-none text-sm">
-                                            expand_more
-                                        </span>
+                                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-[#4a463f] pointer-events-none w-4 h-4" />
                                     </div>
                                 </div>
 
@@ -856,13 +823,13 @@ export const YuthiAdminDashboard: React.FC = () => {
                                 >
                                     {isAdding ? (
                                         <>
-                                            <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
                                             Initializing...
                                         </>
                                     ) : (
                                         <>
                                             Add product
-                                            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                                            <ArrowRight className="w-4 h-4" />
                                         </>
                                     )}
                                 </button>
@@ -880,9 +847,9 @@ export const YuthiAdminDashboard: React.FC = () => {
                             <h3 className="text-lg font-bold text-[#3D404C]">Edit Product</h3>
                             <button
                                 onClick={() => setIsEditModalOpen(false)}
-                                className="material-symbols-outlined text-[#696B75] hover:text-[#3D404C] cursor-pointer"
+                                className="text-[#696B75] hover:text-[#3D404C] cursor-pointer"
                             >
-                                close
+                                <X className="w-5 h-5" />
                             </button>
                         </div>
 
@@ -978,7 +945,7 @@ export const YuthiAdminDashboard: React.FC = () => {
                                 >
                                     {isSubmitting ? (
                                         <>
-                                            <span className="material-symbols-outlined text-sm animate-spin">progress_activity</span>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
                                             Saving Changes...
                                         </>
                                     ) : (
