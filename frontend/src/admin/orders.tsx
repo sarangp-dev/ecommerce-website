@@ -133,41 +133,53 @@ export const GlobalLoader: React.FC<GlobalLoaderProps> = ({ isLoading, loadingMe
 export const YuthiOrdersDashboard: React.FC = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
+    const [fetchError, setFetchError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    // Global Action Loading State & Message
     const [actionLoading, setActionLoading] = useState(false);
     const [loadingMessage, setLoadingMessage] = useState('');
+    const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-    // Selected Order for Details Modal
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [statusUpdating, setStatusUpdating] = useState(false);
 
+    const showToast = (message: string, type: 'success' | 'error') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3500);
+    };
+
     const getAllOrders = async () => {
         try {
             setLoading(true);
+            setFetchError(null);
             const response = await axios.get(`${API_URL_PRODUCT}/getorders`, {
                 withCredentials: true,
+                timeout: 15000,
             });
-
-
-
-            // Handle if response.data is an array directly vs an object containing orders
             const ordersData = Array.isArray(response.data) ? response.data : response.data.orders;
             setOrders(ordersData || []);
-            console.log(ordersData)
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error fetching orders:", error);
-            // Fallback mock data...
+            if (error.code === 'ECONNABORTED') {
+                setFetchError('Request timed out. The server may be starting up — please retry.');
+            } else if (error.response?.status === 401) {
+                setFetchError('Unauthorized. Please log in as an admin and try again.');
+            } else if (error.response?.status === 500) {
+                setFetchError('Server error while fetching orders. Check backend logs.');
+            } else if (!error.response) {
+                setFetchError('Could not reach the server. Check your connection or backend URL.');
+            } else {
+                setFetchError(`Unexpected error: ${error.response?.status ?? error.message}`);
+            }
         } finally {
             setLoading(false);
         }
     };
+
     useEffect(() => {
         getAllOrders();
-
     }, []);
 
     const filteredOrders = orders.filter(
@@ -195,15 +207,10 @@ export const YuthiOrdersDashboard: React.FC = () => {
             if (selectedOrder) {
                 setSelectedOrder({ ...selectedOrder, orderStatus: newStatus });
             }
-        } catch (error) {
+            showToast(`Order status updated to ${newStatus}`, 'success');
+        } catch (error: any) {
             console.error("Error updating order status:", error);
-            // Optimistic update fallback for UI testing
-            setOrders((prev) =>
-                prev.map((ord) => (ord.id === orderId ? { ...ord, orderStatus: newStatus } : ord))
-            );
-            if (selectedOrder) {
-                setSelectedOrder({ ...selectedOrder, orderStatus: newStatus });
-            }
+            showToast(error.response?.data?.message || 'Failed to update order status.', 'error');
         } finally {
             setStatusUpdating(false);
             setActionLoading(false);
@@ -226,6 +233,31 @@ export const YuthiOrdersDashboard: React.FC = () => {
     return (
         <div className="bg-[#FFF8F0] text-[#3D404C] font-sans h-screen flex flex-col md:flex-row overflow-hidden selection:bg-[#D0C5AF] selection:text-[#3D404C] relative">
             <GlobalLoader isLoading={actionLoading} loadingMessage={loadingMessage} />
+
+            {/* Toast Notification */}
+            {toast && (
+                <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl text-sm font-medium transition-all ${
+                    toast.type === 'success'
+                        ? 'bg-[#3D5B32] text-[#FFF8F0]'
+                        : 'bg-[#3D404C] text-[#FFF8F0]'
+                }`}>
+                    <span>{toast.type === 'success' ? '✓' : '⚠'}</span>
+                    <span>{toast.message}</span>
+                </div>
+            )}
+
+            {/* Error Banner */}
+            {fetchError && !loading && (
+                <div className="fixed top-16 left-1/2 -translate-x-1/2 z-[150] flex items-center gap-4 bg-[#3D404C] text-[#FFF8F0] px-5 py-3 rounded-xl shadow-xl text-sm max-w-[90vw]">
+                    <span>⚠️ {fetchError}</span>
+                    <button
+                        onClick={getAllOrders}
+                        className="bg-[#D4AF37] text-[#3D404C] px-3 py-1.5 rounded-lg font-bold text-xs whitespace-nowrap hover:opacity-90"
+                    >
+                        Retry
+                    </button>
+                </div>
+            )}
 
             {mobileMenuOpen && (
                 <div

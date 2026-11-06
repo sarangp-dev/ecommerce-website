@@ -35,6 +35,6 @@ router.post('/payment-success', controller.verifyPaymentSession);
 
 
 router.get('/getorders', controllers.getAllOrders);
-router.put('/orders/:id/status', controllers.updateOrderStatus);
+router.put('/updateorderstatus/:id', controllers.updateOrderStatus);
 
 export default router;

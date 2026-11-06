@@ -52,6 +52,17 @@ const orderSchema = new mongoose.Schema(
             unique: true,
             sparse: true,
         },
+
+        orderStatus: {
+            type: String,
+            enum: ['Processing', 'Shipped', 'Delivered', 'Cancelled'],
+            default: 'Processing',
+        },
+
+        shippingAddress: {
+            type: String,
+            default: 'Address on file',
+        },
     },
     {
         timestamps: true,

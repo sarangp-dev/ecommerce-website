@@ -5,6 +5,83 @@ import { useCart } from './CartContext'
 import axios from "axios";
 const API_URL_PRODUCT = import.meta.env.VITE_API_URL_PRODUCT;
 
+// ─── Skeleton Shimmer ─────────────────────────────────────────────────────────
+
+function SkeletonBox({ w, h, radius = '8px', style = {} }: { w?: string; h: string; radius?: string; style?: React.CSSProperties }) {
+    return (
+        <div
+            style={{
+                width: w || '100%',
+                height: h,
+                borderRadius: radius,
+                background: 'linear-gradient(90deg, #EEE7DA 25%, #F7F0E2 50%, #EEE7DA 75%)',
+                backgroundSize: '200% 100%',
+                animation: 'shimmer 1.6s infinite',
+                flexShrink: 0,
+                ...style,
+            }}
+        />
+    );
+}
+
+function ProductCardSkeleton() {
+    return (
+        <div
+            style={{
+                background: 'rgba(247, 240, 226, 0.85)',
+                border: '1px solid #D0C5AF',
+                borderRadius: '18px',
+                overflow: 'hidden',
+            }}
+        >
+            <SkeletonBox h="210px" radius="0" />
+            <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <SkeletonBox h="10px" w="40%" />
+                <SkeletonBox h="16px" w="75%" />
+                <SkeletonBox h="12px" />
+                <SkeletonBox h="12px" w="85%" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+                    <SkeletonBox h="28px" w="70px" />
+                    <SkeletonBox h="34px" w="80px" radius="9px" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function HeroSkeleton() {
+    return (
+        <section
+            style={{
+                minHeight: '100vh',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                alignItems: 'center',
+                padding: '0 4rem',
+                paddingTop: '68px',
+            }}
+            className="hero-grid section-pad"
+        >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <SkeletonBox h="12px" w="220px" />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <SkeletonBox h="64px" w="80%" radius="10px" />
+                    <SkeletonBox h="64px" w="60%" radius="10px" />
+                </div>
+                <SkeletonBox h="14px" />
+                <SkeletonBox h="14px" w="85%" />
+                <div style={{ display: 'flex', gap: '0.875rem' }}>
+                    <SkeletonBox h="50px" w="160px" radius="11px" />
+                    <SkeletonBox h="50px" w="120px" radius="11px" />
+                </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <SkeletonBox h="300px" w="300px" radius="28px" />
+            </div>
+        </section>
+    );
+}
+
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 type Product = {
@@ -18,74 +95,7 @@ type Product = {
     image: string;
     description: string;
 };
-const initialProducts: Product[] = [
-    {
-        id: 1,
-        name: 'Nebula Pro Headphones',
-        price: 299,
-        originalPrice: 399,
-        tag: 'BEST SELLER',
-        tagColor: '#D4AF37',
-        category: 'Audio',
-        image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop&auto=format',
-        description: 'Immersive 3D audio with AI noise cancellation',
-    },
-    {
-        id: 2,
-        name: 'Quantum Watch X',
-        price: 599,
-        originalPrice: null,
-        tag: 'NEW ARRIVAL',
-        tagColor: '#735C00',
-        category: 'Wearables',
-        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop&auto=format',
-        description: 'Biometric tracking beyond limits',
-    },
-    {
-        id: 3,
-        name: 'Void Runner Sneakers',
-        price: 189,
-        originalPrice: null,
-        tag: 'LIMITED',
-        tagColor: '#3D5B32',
-        category: 'Footwear',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600&h=600&fit=crop&auto=format',
-        description: 'Zero gravity comfort technology',
-    },
-    {
-        id: 4,
-        name: 'Photon Camera 4K',
-        price: 1299,
-        originalPrice: null,
-        tag: 'EXCLUSIVE',
-        tagColor: '#D4AF37',
-        category: 'Photography',
-        image: 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&h=600&fit=crop&auto=format',
-        description: 'Capture light at its purest',
-    },
-    {
-        id: 5,
-        name: 'Matrix Laptop Ultra',
-        price: 2499,
-        originalPrice: null,
-        tag: 'FEATURED',
-        tagColor: '#3D5B32',
-        category: 'Computing',
-        image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&h=600&fit=crop&auto=format',
-        description: 'Process reality at machine speed',
-    },
-    {
-        id: 6,
-        name: 'Prism Sunglasses',
-        price: 249,
-        originalPrice: null,
-        tag: 'HOT',
-        tagColor: '#735C00',
-        category: 'Eyewear',
-        image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop&auto=format',
-        description: 'See the world in new frequencies',
-    },
-]
+// No hardcoded dummy data — real products load from the API with skeleton loading
 
 const categories = [
     { name: 'Audio', icon: '🎧', count: 47, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop&auto=format' },
@@ -299,28 +309,39 @@ function Nav({ cartCount }: { cartCount: number }) {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 
-function HeroSection({ products }: { products: any[] }) {
+function HeroSection({ products, loading }: { products: any[]; loading: boolean }) {
     const [currentImage, setCurrentImage] = useState(0);
 
-    const [isChanging, setIsChanging] = useState(false);
     useEffect(() => {
         if (!products || products.length <= 1) return;
-
         const timer = setTimeout(() => {
             setCurrentImage((prev) => (prev + 1) % products.length);
-        }, 10000);
-
-        return () => clearTimeout(timer);
-    }, [products, currentImage]);
-    useEffect(() => {
-        if (!products || products.length <= 1) return;
-
-        const timer = setTimeout(() => {
-            setCurrentImage((prev) => (prev + 1) % products.length);
-        }, 20000); // EVERY image stays for exactly 20 seconds
-
+        }, 8000);
         return () => clearTimeout(timer);
     }, [currentImage, products.length]);
+
+    if (loading) return <HeroSkeleton />;
+
+    if (!products || products.length === 0) {
+        return (
+            <section
+                style={{
+                    minHeight: '100vh',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingTop: '68px',
+                }}
+            >
+                <div style={{ textAlign: 'center', color: C.fgDim, fontFamily: 'Plus Jakarta Sans' }}>
+                    <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛍️</div>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 600, color: C.fg }}>No products yet</div>
+                    <div style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>Check back soon!</div>
+                </div>
+            </section>
+        );
+    }
+
     const currentProduct = products[currentImage];
     return (
         <section
@@ -879,10 +900,12 @@ function ProductCard({
 // ─── Products Section ─────────────────────────────────────────────────────────
 function ProductsSection({
     products,
-    onAddToCart
+    onAddToCart,
+    loading,
 }: {
     products: any[];
     onAddToCart: (product: any) => void;
+    loading: boolean;
 }) {
     const [filter, setFilter] = useState('All');
 
@@ -962,9 +985,25 @@ function ProductsSection({
                     gap: '1.5rem',
                 }}
             >
-                {filtered.map((product) => (
-                    <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
-                ))}
+                {loading
+                    ? Array.from({ length: 6 }).map((_, i) => <ProductCardSkeleton key={i} />)
+                    : filtered.length > 0
+                        ? filtered.map((product) => (
+                            <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
+                        ))
+                        : (
+                            <div style={{
+                                gridColumn: '1 / -1',
+                                textAlign: 'center',
+                                padding: '4rem',
+                                color: C.fgDim,
+                                fontFamily: 'Plus Jakarta Sans',
+                            }}>
+                                <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>📭</div>
+                                <div style={{ fontWeight: 600, fontSize: '1rem', color: C.fg }}>No products found</div>
+                            </div>
+                        )
+                }
             </div>
         </section>
     )
@@ -1782,20 +1821,34 @@ function cartpage() {
 
 export default function HomeMod() {
     const { addToCart, cartCount } = useCart();
-    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const getproducts = async () => {
         try {
-            const res = await axios.get(`${API_URL_PRODUCT}/getproducts`);
-
-            if (res.status === 200) {
-                console.log("Product data successfully fetched:", res.data);
-
+            setLoading(true);
+            setError(null);
+            const res = await axios.get(`${API_URL_PRODUCT}/getproducts`, { timeout: 15000 });
+            if (res.status === 200 && res.data?.products) {
                 setProducts(res.data.products);
+            } else {
+                setError('Unexpected response from server.');
             }
-        } catch (err) {
-            console.error("Error fetching products:", err);
+        } catch (err: any) {
+            console.error('Error fetching products:', err);
+            if (err.code === 'ECONNABORTED') {
+                setError('Request timed out. Please check your connection.');
+            } else if (err.response) {
+                setError(`Server error: ${err.response.status}`);
+            } else {
+                setError('Could not connect to the server. Please try again.');
+            }
+        } finally {
+            setLoading(false);
         }
     };
+
     useEffect(() => {
         getproducts();
     }, []);
@@ -1803,13 +1856,58 @@ export default function HomeMod() {
     return (
         <div style={{ background: C.bg, minHeight: '100vh', color: C.fg }}>
             <Nav cartCount={cartCount} />
-            <HeroSection products={products} />
+
+            {/* Global error banner */}
+            {error && !loading && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        bottom: '2rem',
+                        left: '50%',
+                        transform: 'translateX(-50%)',
+                        background: '#3D404C',
+                        color: '#FFF8F0',
+                        padding: '0.9rem 1.75rem',
+                        borderRadius: '12px',
+                        fontFamily: 'Plus Jakarta Sans',
+                        fontSize: '0.875rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '1rem',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+                        zIndex: 999,
+                        maxWidth: '90vw',
+                    }}
+                >
+                    <span>⚠️ {error}</span>
+                    <button
+                        onClick={getproducts}
+                        style={{
+                            background: C.gold,
+                            border: 'none',
+                            color: '#3D404C',
+                            padding: '0.4rem 1rem',
+                            borderRadius: '8px',
+                            fontFamily: 'Outfit',
+                            fontWeight: 700,
+                            fontSize: '0.8rem',
+                            cursor: 'pointer',
+                            whiteSpace: 'nowrap',
+                        }}
+                    >
+                        Retry
+                    </button>
+                </div>
+            )}
+
+            <HeroSection products={products} loading={loading} />
             <ProductsSection
                 products={products}
                 onAddToCart={addToCart}
+                loading={loading}
             />
             <CategoriesSection />
-            {products.length > 0 && (
+            {!loading && products.length > 0 && (
                 <SpotlightSection
                     product={products[0]}
                     onAddToCart={addToCart}
